@@ -12,7 +12,7 @@ func TestGetApiKey(t *testing.T) {
 		headerType string
 		want       string
 	}{
-		{"successful key get", "ApiKey testey", "Authorization", "testKey"},
+		{"successful key get", "ApiKey testKey", "Authorization", "testKey"},
 		{"missing authorization header", "ApiKey testKey", "", ""},
 		{"no ApiKey header", "bearer testKey", "Authorization", ""},
 		{"nothing after header", "ApiKey", "Authorization", ""},
