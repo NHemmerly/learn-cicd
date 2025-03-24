@@ -12,16 +12,19 @@ jobs:
         timeout-minutes: 30
 
         steps:
-            - id: 'auth'
-              uses: 'google-github-actions/auth@v2'
+            - id: auth
+              uses: google-github-actions/auth@v2
               with:
-                credentials_json: $GCP_CREDENTIALS
+                credentials_json: ${{secrets.GCP_CREDENTIALS}}
 
-            - name: 'Set up Cloud SDK'
-              uses: 'google-github-actions/setup-gcloud@v2'
+            - name: Set up Cloud SDK
+              uses: google-github-actions/setup-gcloud@v2
+              with:
+                project_id: "notely-454417"
+                region: "us-central1"
 
-            - name: 'Use gcloud CLI'
-              run: 'gcloud info'
+            - name: Use gcloud CLI
+              run: gcloud info
               
             - name: Checkout code
               uses: actions/checkout@v4
