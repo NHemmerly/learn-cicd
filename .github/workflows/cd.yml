@@ -23,6 +23,11 @@ jobs:
                 project_id: "notely-454417"
                 region: "us-central1"
 
+            - name: Set GOOGLE_APPLICATION_CREDENTIALS
+              run: echo "${{ secrets.GCP_CREDENTIALS }}" > /tmp/credentials.json
+              env:
+                GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
+
             - name: Use gcloud CLI
               run: gcloud info
               
