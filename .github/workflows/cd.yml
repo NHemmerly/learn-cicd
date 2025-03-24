@@ -24,9 +24,9 @@ jobs:
                 region: "us-central1"
 
             - name: Set GOOGLE_APPLICATION_CREDENTIALS
-              run: echo "${{ secrets.GCP_CREDENTIALS }}" > /home/runner/work/learn-cicd/learn-cicd/gha-creds-90a73063cba8927b.json
+              run: echo "${{ secrets.GCP_CREDENTIALS }}" > /tmp/credentials.json
               env:
-                GOOGLE_APPLICATION_CREDENTIALS: /home/runner/work/learn-cicd/learn-cicd/gha-creds-90a73063cba8927b.json
+                GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
 
             - name: Use gcloud CLI
               run: gcloud info
@@ -44,5 +44,7 @@ jobs:
 
             - name: Build to Artifact registry
               run: gcloud builds submit --tag us-central1-docker.pkg.dev/notely-454417/notely-ar-repo/notely:latest .
+              env:
+                GOOGLE_APPLICATION_CREDENTIALS: ${{secrets.GCP_CREDENTIALS}}
 
     
