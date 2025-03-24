@@ -34,7 +34,6 @@ jobs:
             uses: google-github-actions/setup-gcloud@v2
             with:
               project_id: "notely-454417"
-              region: "us-central1"
 
           - name: Set GOOGLE_APPLICATION_CREDENTIALS
             run: echo "${{ secrets.GCP_CREDENTIALS }}" > /tmp/credentials.json
@@ -47,5 +46,6 @@ jobs:
               GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
               GOOGLE_GHA_CREDS_PATH: /tmp/credentials.json
 
-          - name: Use gcloud CLI
-            run: gcloud info
+          - name: Deploy to Cloud Run
+            run: gcloud run deploy notely --image us-central1-docker.pkg.dev/notely-454417/notely-ar-repo/notely:latest --region us-central1 --allow-unauthenticated --project notely-454417 --max-instances=4
+          
