@@ -12,41 +12,40 @@ jobs:
         timeout-minutes: 30
 
         steps:
-            - id: auth
-              uses: google-github-actions/auth@v2
-              with:
-                credentials_json: ${{secrets.GCP_CREDENTIALS}}
+          
+          - name: Checkout code
+            uses: actions/checkout@v4
 
-            - name: Set up Cloud SDK
-              uses: google-github-actions/setup-gcloud@v2
-              with:
-                project_id: "notely-454417"
-                region: "us-central1"
+          - name: Setup Go
+            uses: actions/setup-go@v5
+            with:
+              go-version: "1.22"
+            
+          - name: Build 
+            run: scripts/buildprod.sh
+            
 
-            - name: Set GOOGLE_APPLICATION_CREDENTIALS
-              run: echo "${{ secrets.GCP_CREDENTIALS }}" > /tmp/credentials.json
-              env:
-                GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
+          - id: auth
+            uses: google-github-actions/auth@v2
+            with:
+              credentials_json: ${{secrets.GCP_CREDENTIALS}}
 
-            - name: Build to Artifact registry
-              run: "gcloud builds submit --tag us-central1-docker.pkg.dev/notely-454417/notely-ar-repo/notely:latest ."
-              env:
-                GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
-                GOOGLE_GHA_CREDS_PATH: /tmp/credentials.json
+          - name: Set up Cloud SDK
+            uses: google-github-actions/setup-gcloud@v2
+            with:
+              project_id: "notely-454417"
+              region: "us-central1"
 
-            - name: Use gcloud CLI
-              run: gcloud info
-              
-            - name: Checkout code
-              uses: actions/checkout@v4
+          - name: Set GOOGLE_APPLICATION_CREDENTIALS
+            run: echo "${{ secrets.GCP_CREDENTIALS }}" > /tmp/credentials.json
+            env:
+              GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
 
-            - name: Setup Go
-              uses: actions/setup-go@v5
-              with:
-                go-version: "1.22"
+          - name: Build to Artifact registry
+            run: "gcloud builds submit --tag us-central1-docker.pkg.dev/notely-454417/notely-ar-repo/notely:latest --dockerfile=./Dockerfile"
+            env:
+              GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
+              GOOGLE_GHA_CREDS_PATH: /tmp/credentials.json
 
-            - name: Build 
-              run: scripts/buildprod.sh
-
-
-    
+          - name: Use gcloud CLI
+            run: gcloud info
